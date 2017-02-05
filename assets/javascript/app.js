@@ -1,6 +1,15 @@
 //connect to my firebase
-var myFirebase = new Firebase('https://fb-train-schedule.firebaseio.com/');
+var config = {
+    apiKey: "AIzaSyApFR8L9CeTuTASpT1bZFh4YvhZq8lYaeg",
+    authDomain: "traintime-beb5d.firebaseapp.com",
+    databaseURL: "https://traintime-beb5d.firebaseio.com",
+    storageBucket: "traintime-beb5d.appspot.com",
+    messagingSenderId: "89395730090"
+  };
+  
+  firebase.initializeApp(config);
 
+             
 // grab data from form
 $("#submit").on('click', function(){
   var train = $("#train_name").val().trim();
@@ -8,17 +17,18 @@ $("#submit").on('click', function(){
   var frequency = $("#frequency").val().trim();
   var firstTrain = $("#firstTrain").val().trim();
 
-  //add data from form and add it to firebase DB
-  myFirebase.push({
+var database = firebase.database();
+          
+          database.ref().push({
               trainName: train,
               destination: destination,
               frequency: frequency,
               firstTrain: firstTrain
-          })
-  })
+          });
+  
 
 //display data
-myFirebase.on('child_added', function(childSnapshot) {
+database.on('child_added', function(childSnapshot) {
   // find when the next train is and minutes until next train
   var tfrequency = childSnapshot.val().frequency;
   // pushed back 1 year to make sure it comes before current time
